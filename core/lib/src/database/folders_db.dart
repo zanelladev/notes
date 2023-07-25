@@ -1,6 +1,5 @@
 import 'package:core/src/database/database_service.dart';
 import 'package:dependencies/dependencies.dart';
-
 import '../models/folder_model.dart';
 
 class FolderDB {
@@ -10,7 +9,7 @@ class FolderDB {
     await database.execute("""CREATE TABLE IF NOT EXISTS $tableName (
       "id" INTEGER NOT NULL,
       "title" TEXT NOT NULL,
-      "notesCount" INTEGER NOT NULL,
+      "notes_count" INTEGER NOT NULL,
       PRIMARY KEY("id" AUTOINCREMENT)
     );""");
   }
@@ -23,7 +22,8 @@ class FolderDB {
 
   Future<List<Folder>> fetchAll() async {
     final database = await DatabaseService().database;
-    final folders = await database.rawQuery('''SELECT * from $tableName''');
+    final folders = await database
+        .rawQuery('''SELECT * from $tableName ORDER BY notes_count DESC''');
     return folders.map((folder) => Folder.fromSqfliteDatabase(folder)).toList();
   }
 
