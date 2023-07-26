@@ -12,6 +12,7 @@ class FoldersPage extends StatefulWidget {
 }
 
 class _FoldersPageState extends State<FoldersPage> {
+  static final ValueNotifier<List<Folder>> foldersNotifier = ValueNotifier([]);
   Future<List<Folder>>? futureFolders;
   final folderDB = FolderDB();
 
@@ -21,10 +22,9 @@ class _FoldersPageState extends State<FoldersPage> {
     fetchFolders();
   }
 
-  void fetchFolders() {
-    setState(() {
-      futureFolders = folderDB.fetchAll();
-    });
+  void fetchFolders() async {
+    futureFolders = folderDB.fetchAll();
+    foldersNotifier.value = await futureFolders as List<Folder>;
   }
 
   @override
@@ -48,37 +48,24 @@ class _FoldersPageState extends State<FoldersPage> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: FutureBuilder(
-                future: futureFolders,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else {
-                    final todos = snapshot.data!;
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        fetchFolders();
+              child: ValueListenableBuilder(
+                  valueListenable: foldersNotifier,
+                  builder: (context, value, _) {
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: foldersNotifier.value.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      itemBuilder: (_, index) {
+                        final todo = foldersNotifier.value[index];
+                        return FolderCard(
+                          title: todo.title,
+                          notesQuantity: todo.notesCount,
+                          onPressed: () =>
+                              Modular.to.pushNamed('/notes/', arguments: '1'),
+                        );
                       },
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        itemCount: todos.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 12),
-                        itemBuilder: (_, index) {
-                          final todo = todos[index];
-                          return FolderCard(
-                            title: todo.title,
-                            notesQuantity: todo.notesCount,
-                            onPressed: () =>
-                                Modular.to.pushNamed('/notes/', arguments: '1'),
-                          );
-                        },
-                      ),
                     );
-                  }
-                },
-              ),
+                  }),
             ),
           )
         ],
