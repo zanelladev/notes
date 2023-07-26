@@ -58,10 +58,11 @@ class _FoldersPageState extends State<FoldersPage> {
                       itemBuilder: (_, index) {
                         final todo = foldersNotifier.value[index];
                         return FolderCard(
+                          id: todo.id,
                           title: todo.title,
                           notesQuantity: todo.notesCount,
                           onPressed: () =>
-                              Modular.to.pushNamed('/notes/', arguments: '1'),
+                              Modular.to.pushNamed('/notes/', arguments: index),
                         );
                       },
                     );

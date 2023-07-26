@@ -17,17 +17,18 @@ class NoteDB {
     );""");
   }
 
-  Future<int> create() async {
+  Future<int> create({required int folderId}) async {
     final database = await DatabaseService().database;
     return await database.rawInsert(
-        '''INSERT INTO $tableName (title, content, update_at) VALUES (?, ?, ?)''',
-        ['empty title', '', Note.getFormatedData()]);
+        '''INSERT INTO $tableName (title, content, update_at, folder_id) VALUES (?, ?, ?, ?)''',
+        ['new note', '', Note.getFormatedData(), folderId]);
   }
 
-  Future<List<Note>> fetchAll() async {
+  Future<List<Note>> fetchByFolder({required int folderId}) async {
     final database = await DatabaseService().database;
-    final notes = await database
-        .rawQuery('''SELECT * from $tableName ORDER BY id DESC''');
+    final notes = await database.rawQuery(
+        '''SELECT * from $tableName WHERE folder_id = ? ORDER BY id DESC''',
+        [folderId]);
     return notes.map((note) => Note.fromSqfliteDatabase(note)).toList();
   }
 

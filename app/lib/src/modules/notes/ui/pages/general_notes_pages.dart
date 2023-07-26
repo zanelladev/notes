@@ -1,18 +1,37 @@
+import 'package:core/core.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class GeneralNotesPage extends StatefulWidget {
-  final String folderId;
+  final int folderId;
 
-  const GeneralNotesPage({super.key, required this.folderId});
+  const GeneralNotesPage({
+    super.key,
+    required this.folderId,
+  });
 
   @override
   State<GeneralNotesPage> createState() => _GeneralNotesPageState();
 }
 
 class _GeneralNotesPageState extends State<GeneralNotesPage> {
+  static final ValueNotifier<List<Note>> notesNotifier = ValueNotifier([]);
+  Future<List<Note>>? futureNotes;
+  final notesDB = NoteDB();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchNotes();
+  }
+
+  void fetchNotes() async {
+    futureNotes = notesDB.fetchByFolder(folderId: widget.folderId);
+    notesNotifier.value = await futureNotes as List<Note>;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -44,7 +63,10 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
                         ),
                       ),
                       InkWell(
-                        onTap: () {},
+                        onTap: () async {
+                          await notesDB.create(folderId: widget.folderId);
+                          fetchNotes();
+                        },
                         borderRadius: BorderRadius.circular(16),
                         child: Icon(
                           Ionicons.add,
@@ -63,19 +85,24 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  children: List.generate(
-                    10,
-                    (index) => NoteCard(
-                      title: 'how I found a new dream',
-                      contentPreview: 'Today my wish has come true - to devote the whole dedede to the world',
-                      onTap: () => Modular.to.pushNamed('note'),
-                    ),
-                  ),
-                ),
+                child: ValueListenableBuilder(
+                    valueListenable: notesNotifier,
+                    builder: (context, value, _) {
+                      return GridView.count(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        children: List.generate(
+                          notesNotifier.value.length,
+                          (index) => NoteCard(
+                            title: 'how I found a new dream',
+                            contentPreview:
+                                'Today my wish has come true - to devote the whole dedede to the world',
+                            onTap: () => Modular.to.pushNamed('note'),
+                          ),
+                        ),
+                      );
+                    }),
               ),
             )
           ],

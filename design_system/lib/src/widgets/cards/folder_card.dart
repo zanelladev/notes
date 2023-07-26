@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import '../../common/extensions/notes_text_styles_extension.dart';
 
 class FolderCard extends StatelessWidget {
+  final int id;
   final String title;
   final int notesQuantity;
   final VoidCallback onPressed;
 
   const FolderCard({
     super.key,
+    required this.id,
     required this.title,
     required this.notesQuantity,
     required this.onPressed,
