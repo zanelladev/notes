@@ -3,12 +3,14 @@ class Note {
   final String title;
   final String content;
   final String updateAt;
+  final int folderId;
 
   Note({
     required this.id,
     required this.title,
     required this.content,
     required this.updateAt,
+    required this.folderId,
   });
 
   static String getFormatedData() {
@@ -21,5 +23,6 @@ class Note {
         title: map['title'] ?? '',
         content: map['content'] ?? '',
         updateAt: getFormatedData(),
+        folderId: map['folder_id'] ?? 0,
       );
 }
