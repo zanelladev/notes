@@ -16,8 +16,9 @@ class FolderDB {
 
   Future<int> create({required String title}) async {
     final database = await DatabaseService().database;
-    return await database
-        .rawInsert('''INSERT INTO $tableName (title) VALUES (?)''', [title]);
+    return await database.rawInsert(
+        '''INSERT INTO $tableName (title, notes_count) VALUES (?, ?)''',
+        [title, 0]);
   }
 
   Future<List<Folder>> fetchAll() async {

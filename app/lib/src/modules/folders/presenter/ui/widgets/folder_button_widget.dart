@@ -1,8 +1,16 @@
+import 'package:core/core.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 
 class FolderButtonWidget extends StatefulWidget {
-  const FolderButtonWidget({super.key});
+  final Folder? folder;
+  final VoidCallback fetchFunction;
+
+  const FolderButtonWidget({
+    super.key,
+    this.folder,
+    required this.fetchFunction,
+  });
 
   @override
   State<FolderButtonWidget> createState() => _FolderButtonWidgetState();
@@ -11,14 +19,8 @@ class FolderButtonWidget extends StatefulWidget {
 class _FolderButtonWidgetState extends State<FolderButtonWidget> {
   bool _isExtended = false;
   final _text = '';
-
   final _controller = TextEditingController();
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  final folderDB = FolderDB();
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,14 @@ class _FolderButtonWidgetState extends State<FolderButtonWidget> {
                         ),
                         if (_controller.value.text.isNotEmpty)
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              await folderDB.create(
+                                  title: _controller.value.text);
+                              widget.fetchFunction();
+                              setState(() {
+                                _isExtended = false;
+                              });
+                            },
                             icon: Icon(
                               Icons.done,
                               color: theme.colorScheme.onBackground,

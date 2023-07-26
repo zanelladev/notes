@@ -1,5 +1,6 @@
 import 'package:dependencies/dependencies.dart';
 import 'folders_db.dart';
+import 'notes_db.dart';
 
 class DatabaseService {
   Database? _database;
@@ -29,6 +30,8 @@ class DatabaseService {
     return database;
   }
 
-  Future<void> create(Database database, int version) async =>
-      await FolderDB().createTable(database);
+  Future<void> create(Database database, int version) async {
+    await FolderDB().createTable(database);
+    await NoteDB().createTable(database);
+  }
 }
