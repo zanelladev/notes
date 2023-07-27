@@ -28,6 +28,20 @@ class FolderDB {
     return folders.map((folder) => Folder.fromSqfliteDatabase(folder)).toList();
   }
 
+  Future<int> update({
+    required int id,
+    required int newCount,
+  }) async {
+    final database = await DatabaseService().database;
+    return await database.update(
+      tableName,
+      {'notes_count': newCount},
+      where: 'id = ?',
+      conflictAlgorithm: ConflictAlgorithm.rollback,
+      whereArgs: [id],
+    );
+  }
+
   Future<void> delete(int id) async {
     final database = await DatabaseService().database;
     await database.rawDelete('''DELETE FROM $tableName WHERE id = ?''', [id]);

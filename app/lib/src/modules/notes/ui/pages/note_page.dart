@@ -1,18 +1,39 @@
+import 'package:core/core.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class NotePage extends StatefulWidget {
-  const NotePage({super.key});
+  final Map<String, dynamic> folderNoteInfo;
+  const NotePage({super.key, required this.folderNoteInfo});
 
   @override
   State<NotePage> createState() => _NotePageState();
 }
 
 class _NotePageState extends State<NotePage> {
+  static final ValueNotifier<List<Note>> notesNotifier = ValueNotifier([]);
+  Future<List<Note>>? futureNotes;
+  final notesDB = NoteDB();
+  final folderDB = FolderDB();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchNotes();
+  }
+
+  void fetchNotes() async {
+    final Folder folder = widget.folderNoteInfo["folder"];
+    futureNotes = notesDB.fetchByFolder(folderId: folder.id);
+    notesNotifier.value = await futureNotes as List<Note>;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final folder = widget.folderNoteInfo["folder"];
+    final note = widget.folderNoteInfo["note"];
     final theme = Theme.of(context);
     final textStyles = theme.extension<NotesTextStylesExtension>()!;
 
@@ -54,11 +75,19 @@ class _NotePageState extends State<NotePage> {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'PERSONAL NOTES  •  13/06/2023',
-                    style: textStyles.smallTextGrey.copyWith(fontWeight: FontWeight.bold),
+                    '${folder.title}  •  ${note.updateAt}',
+                    style: textStyles.smallTextGrey
+                        .copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 24),
-                  Text('empty title', style: textStyles.headlineSDark),
+                  TextFormField(
+                    style: textStyles.headlineSDark,
+                    initialValue: note.title,
+                    decoration: const InputDecoration(),
+                    onChanged: (value) {
+                      notesDB.update(id: note.id, title: value);
+                    },
+                  ),
                 ],
               ),
             ),
