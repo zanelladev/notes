@@ -83,10 +83,27 @@ class _NotePageState extends State<NotePage> {
                   TextFormField(
                     style: textStyles.headlineSDark,
                     initialValue: note.title,
-                    decoration: const InputDecoration(),
+                    maxLines: null,
+                    textInputAction: TextInputAction.newline,
+                    cursorColor: theme.colorScheme.secondary,
+                    decoration: const InputDecoration(border: InputBorder.none),
                     onChanged: (value) {
                       notesDB.update(id: note.id, title: value);
                     },
+                  ),
+                  SingleChildScrollView(
+                    child: TextFormField(
+                      style: textStyles.smallTextGrey,
+                      initialValue: note.content,
+                      maxLines: null,
+                      textInputAction: TextInputAction.newline,
+                      cursorColor: theme.colorScheme.secondary,
+                      decoration:
+                          const InputDecoration(border: InputBorder.none),
+                      onChanged: (value) {
+                        notesDB.update(id: note.id, content: value);
+                      },
+                    ),
                   ),
                 ],
               ),
