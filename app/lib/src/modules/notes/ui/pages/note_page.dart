@@ -41,74 +41,77 @@ class _NotePageState extends State<NotePage> {
       value: NotesSystemChromeSettings.dark,
       child: Scaffold(
         backgroundColor: theme.colorScheme.onBackground,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 32),
-            Padding(
-              padding: const EdgeInsets.all(28).copyWith(bottom: 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InkWell(
-                        onTap: Modular.to.pop,
-                        borderRadius: BorderRadius.circular(16),
-                        child: Icon(
-                          Ionicons.arrow_back_outline,
-                          color: theme.colorScheme.background,
-                          size: 28,
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 32),
+              Padding(
+                padding: const EdgeInsets.all(28).copyWith(bottom: 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: Modular.to.pop,
+                          borderRadius: BorderRadius.circular(16),
+                          child: Icon(
+                            Ionicons.arrow_back_outline,
+                            color: theme.colorScheme.background,
+                            size: 28,
+                          ),
                         ),
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        borderRadius: BorderRadius.circular(16),
-                        child: Icon(
-                          Ionicons.bookmark_outline,
-                          color: theme.colorScheme.background,
-                          size: 24,
+                        InkWell(
+                          onTap: () {},
+                          borderRadius: BorderRadius.circular(16),
+                          child: Icon(
+                            Ionicons.bookmark_outline,
+                            color: theme.colorScheme.background,
+                            size: 24,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    '${folder.title}  •  ${note.updateAt}',
-                    style: textStyles.smallTextGrey
-                        .copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 24),
-                  TextFormField(
-                    style: textStyles.headlineSDark,
-                    initialValue: note.title,
-                    maxLines: null,
-                    textInputAction: TextInputAction.newline,
-                    cursorColor: theme.colorScheme.secondary,
-                    decoration: const InputDecoration(border: InputBorder.none),
-                    onChanged: (value) {
-                      notesDB.update(id: note.id, title: value);
-                    },
-                  ),
-                  SingleChildScrollView(
-                    child: TextFormField(
-                      style: textStyles.smallTextGrey,
-                      initialValue: note.content,
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      '${folder.title}  •  ${note.updateAt}',
+                      style: textStyles.smallTextGrey
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 24),
+                    TextFormField(
+                      style: textStyles.headlineSDark,
+                      initialValue: note.title,
                       maxLines: null,
                       textInputAction: TextInputAction.newline,
                       cursorColor: theme.colorScheme.secondary,
                       decoration:
                           const InputDecoration(border: InputBorder.none),
                       onChanged: (value) {
-                        notesDB.update(id: note.id, content: value);
+                        notesDB.update(id: note.id, title: value);
                       },
                     ),
-                  ),
-                ],
+                    SingleChildScrollView(
+                      child: TextFormField(
+                        style: textStyles.smallTextGrey,
+                        initialValue: note.content,
+                        maxLines: null,
+                        textInputAction: TextInputAction.newline,
+                        cursorColor: theme.colorScheme.secondary,
+                        decoration:
+                            const InputDecoration(border: InputBorder.none),
+                        onChanged: (value) {
+                          notesDB.update(id: note.id, content: value);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
