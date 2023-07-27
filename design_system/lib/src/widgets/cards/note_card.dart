@@ -32,11 +32,19 @@ class NoteCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: textStyles.smallTextDark),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  title,
+                  style: textStyles.smallTextDark,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               Text(
                 contentPreview,
                 style: textStyles.smallTextGrey,
-                maxLines: 3,
+                maxLines: 4,
                 overflow: TextOverflow.ellipsis,
               ),
             ],
