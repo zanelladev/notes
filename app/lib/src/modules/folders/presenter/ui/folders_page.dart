@@ -56,13 +56,19 @@ class _FoldersPageState extends State<FoldersPage> {
                       itemCount: foldersNotifier.value.length,
                       separatorBuilder: (_, __) => const SizedBox(height: 12),
                       itemBuilder: (_, index) {
-                        final todo = foldersNotifier.value[index];
+                        final folder = foldersNotifier.value[index];
+                        final Map<String, dynamic> folderInfo = {
+                          "folder": folder,
+                          "fetchFolder": () => fetchFolders(),
+                        };
                         return FolderCard(
-                          id: todo.id,
-                          title: todo.title,
-                          notesQuantity: todo.notesCount,
-                          onPressed: () =>
-                              Modular.to.pushNamed('/notes/', arguments: index),
+                          id: folder.id,
+                          title: folder.title,
+                          notesQuantity: folder.notesCount,
+                          onPressed: () => Modular.to.pushNamed(
+                            '/notes/',
+                            arguments: folderInfo,
+                          ),
                         );
                       },
                     );

@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class GeneralNotesPage extends StatefulWidget {
-  final int folderId;
+  final Map<String, dynamic> folderInfo;
 
   const GeneralNotesPage({
     super.key,
-    required this.folderId,
+    required this.folderInfo,
   });
 
   @override
@@ -20,6 +20,7 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
   static final ValueNotifier<List<Note>> notesNotifier = ValueNotifier([]);
   Future<List<Note>>? futureNotes;
   final notesDB = NoteDB();
+  final folderDB = FolderDB();
 
   @override
   void initState() {
@@ -28,7 +29,8 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
   }
 
   void fetchNotes() async {
-    futureNotes = notesDB.fetchByFolder(folderId: widget.folderId);
+    final Folder folder = widget.folderInfo["folder"];
+    futureNotes = notesDB.fetchByFolder(folderId: folder.id);
     notesNotifier.value = await futureNotes as List<Note>;
   }
 
@@ -36,6 +38,7 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textStyles = theme.extension<NotesTextStylesExtension>()!;
+    final Folder folder = widget.folderInfo["folder"];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: NotesSystemChromeSettings.dark,
@@ -64,7 +67,11 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
                       ),
                       InkWell(
                         onTap: () async {
-                          await notesDB.create(folderId: widget.folderId);
+                          int beforeAdd = folder.notesCount;
+                          await notesDB.create(folderId: folder.id);
+                          beforeAdd++;
+                          await folderDB.update(
+                              id: folder.id, newCount: beforeAdd);
                           fetchNotes();
                         },
                         borderRadius: BorderRadius.circular(16),
@@ -77,7 +84,7 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  Text('personal notes', style: textStyles.headlineSDark),
+                  Text(folder.title, style: textStyles.headlineSDark),
                 ],
               ),
             ),
@@ -92,15 +99,22 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
-                        children: List.generate(
-                          notesNotifier.value.length,
-                          (index) => NoteCard(
-                            title: 'how I found a new dream',
-                            contentPreview:
-                                'Today my wish has come true - to devote the whole dedede to the world',
-                            onTap: () => Modular.to.pushNamed('note'),
-                          ),
-                        ),
+                        children:
+                            List.generate(notesNotifier.value.length, (index) {
+                          final note = notesNotifier.value[index];
+                          final Map<String, dynamic> folderNoteInfo = {
+                            "folder": folder,
+                            "note": note,
+                          };
+                          return NoteCard(
+                            title: note.title,
+                            contentPreview: note.content,
+                            onTap: () {
+                              Modular.to
+                                  .pushNamed('note', arguments: folderNoteInfo);
+                            },
+                          );
+                        }),
                       );
                     }),
               ),
