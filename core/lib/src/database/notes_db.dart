@@ -39,7 +39,7 @@ class NoteDB {
       {
         if (title != null) 'title': title,
         if (content != null) 'content': content,
-        if (isFavorited != null) 'favorited': isFavorited,
+        if (isFavorited != null) 'favorited': isFavorited ? 1 : 0,
         'update_at': DateTime.now().millisecondsSinceEpoch,
       },
       where: 'id = ?',
