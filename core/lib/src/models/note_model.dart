@@ -13,16 +13,21 @@ class Note {
     required this.folderId,
   });
 
-  static String getFormatedData() {
-    final now = DateTime.now();
-    return '${now.day}/${now.month}/${now.year}';
+  static String getFormatedData({required millisecondsSinceEpoch}) {
+    final now = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch);
+    final String month;
+    final String day;
+    now.day < 10 ? day = '0${now.day}' : day = '${now.day}';
+    now.month < 10 ? month = '0${now.month}' : month = '${now.month}';
+
+    return '$day/$month/${now.year}';
   }
 
   factory Note.fromSqfliteDatabase(Map<String, dynamic> map) => Note(
         id: map['id']?.toInt() ?? 0,
         title: map['title'] ?? '',
         content: map['content'] ?? '',
-        updateAt: getFormatedData(),
+        updateAt: getFormatedData(millisecondsSinceEpoch: map['update_at']),
         folderId: map['folder_id'] ?? 0,
       );
 }

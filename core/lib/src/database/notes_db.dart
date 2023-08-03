@@ -10,7 +10,7 @@ class NoteDB {
       "id" INTEGER NOT NULL,
       "title" TEXT NOT NULL,
       "content" TEXT NOT NULL,
-      "update_at" TEXT NOT NULL,
+      "update_at" INTEGER NOT NULL,
       "folder_id" INTEGER NOT NULL,
       PRIMARY KEY("id" AUTOINCREMENT),
       FOREIGN KEY(folder_id) REFERENCES folders(id)
@@ -21,14 +21,13 @@ class NoteDB {
     final database = await DatabaseService().database;
     return await database.rawInsert(
         '''INSERT INTO $tableName (title, content, update_at, folder_id) VALUES (?, ?, ?, ?)''',
-        ['new note', '', Note.getFormatedData(), folderId]);
+        ['new note', '', DateTime.now().millisecondsSinceEpoch, folderId]);
   }
 
   Future<List<Note>> fetchByFolder({required int folderId}) async {
     final database = await DatabaseService().database;
-    final notes = await database.rawQuery(
-        '''SELECT * from $tableName WHERE folder_id = ? ORDER BY id DESC''',
-        [folderId]);
+    final notes =
+        await database.rawQuery('''SELECT * from $tableName WHERE folder_id = ? ORDER BY id DESC''', [folderId]);
     return notes.map((note) => Note.fromSqfliteDatabase(note)).toList();
   }
 
@@ -39,7 +38,7 @@ class NoteDB {
       {
         if (title != null) 'title': title,
         if (content != null) 'content': content,
-        'update_at': Note.getFormatedData(),
+        'update_at': DateTime.now().millisecondsSinceEpoch,
       },
       where: 'id = ?',
       conflictAlgorithm: ConflictAlgorithm.rollback,
