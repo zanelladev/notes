@@ -3,6 +3,7 @@ import 'package:dependencies/dependencies.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
 
 class NotePage extends StatefulWidget {
   final Map<String, dynamic> folderNoteInfo;
@@ -64,7 +65,16 @@ class _NotePageState extends State<NotePage> {
                           ),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomAlertDialog(
+                                    isFolder: false,
+                                    title: note.title,
+                                  );
+                                });
+                          },
                           borderRadius: BorderRadius.circular(16),
                           child: Icon(
                             Ionicons.bookmark_outline,
@@ -77,8 +87,7 @@ class _NotePageState extends State<NotePage> {
                     const SizedBox(height: 24),
                     Text(
                       '${folder.title}  •  ${note.updateAt}',
-                      style: textStyles.smallTextGrey
-                          .copyWith(fontWeight: FontWeight.bold),
+                      style: textStyles.smallTextGrey.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 24),
                     TextFormField(
@@ -87,8 +96,7 @@ class _NotePageState extends State<NotePage> {
                       maxLines: null,
                       textInputAction: TextInputAction.newline,
                       cursorColor: theme.colorScheme.secondary,
-                      decoration:
-                          const InputDecoration(border: InputBorder.none),
+                      decoration: const InputDecoration(border: InputBorder.none),
                       onChanged: (value) {
                         notesDB.update(id: note.id, title: value);
                       },
@@ -100,8 +108,7 @@ class _NotePageState extends State<NotePage> {
                         maxLines: null,
                         textInputAction: TextInputAction.newline,
                         cursorColor: theme.colorScheme.secondary,
-                        decoration:
-                            const InputDecoration(border: InputBorder.none),
+                        decoration: const InputDecoration(border: InputBorder.none),
                         onChanged: (value) {
                           notesDB.update(id: note.id, content: value);
                         },
