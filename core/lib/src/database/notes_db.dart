@@ -12,6 +12,7 @@ class NoteDB {
       "content" TEXT NOT NULL,
       "update_at" INTEGER NOT NULL,
       "folder_id" INTEGER NOT NULL,
+      "favorited" INTEGER NOT NULL,
       PRIMARY KEY("id" AUTOINCREMENT),
       FOREIGN KEY(folder_id) REFERENCES folders(id)
     );""");
@@ -20,8 +21,8 @@ class NoteDB {
   Future<int> create({required int folderId}) async {
     final database = await DatabaseService().database;
     return await database.rawInsert(
-        '''INSERT INTO $tableName (title, content, update_at, folder_id) VALUES (?, ?, ?, ?)''',
-        ['new note', '', DateTime.now().millisecondsSinceEpoch, folderId]);
+        '''INSERT INTO $tableName (title, content, update_at, folder_id, favorited) VALUES (?, ?, ?, ?, ?)''',
+        ['new note', '', DateTime.now().millisecondsSinceEpoch, folderId, 0]);
   }
 
   Future<List<Note>> fetchByFolder({required int folderId}) async {
@@ -31,13 +32,14 @@ class NoteDB {
     return notes.map((note) => Note.fromSqfliteDatabase(note)).toList();
   }
 
-  Future<int> update({required int id, String? title, String? content}) async {
+  Future<int> update({required int id, String? title, String? content, bool? isFavorited}) async {
     final database = await DatabaseService().database;
     return await database.update(
       tableName,
       {
         if (title != null) 'title': title,
         if (content != null) 'content': content,
+        if (isFavorited != null) 'favorited': isFavorited,
         'update_at': DateTime.now().millisecondsSinceEpoch,
       },
       where: 'id = ?',

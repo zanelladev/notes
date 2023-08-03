@@ -3,7 +3,7 @@ class Folder {
   final String title;
   final int notesCount;
 
-  Folder({
+  const Folder({
     required this.id,
     required this.title,
     required this.notesCount,

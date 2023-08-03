@@ -3,13 +3,15 @@ class Note {
   final String title;
   final String content;
   final String updateAt;
+  final bool isFavorited;
   final int folderId;
 
-  Note({
+  const Note({
     required this.id,
     required this.title,
     required this.content,
     required this.updateAt,
+    required this.isFavorited,
     required this.folderId,
   });
 
@@ -28,6 +30,7 @@ class Note {
         title: map['title'] ?? '',
         content: map['content'] ?? '',
         updateAt: getFormatedData(millisecondsSinceEpoch: map['update_at']),
+        isFavorited: map['content'] == 1 ? true : false,
         folderId: map['folder_id'] ?? 0,
       );
 }
