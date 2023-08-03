@@ -70,8 +70,7 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
                           int beforeAdd = folder.notesCount;
                           await notesDB.create(folderId: folder.id);
                           beforeAdd++;
-                          await folderDB.update(
-                              id: folder.id, newCount: beforeAdd);
+                          await folderDB.update(id: folder.id, newCount: beforeAdd);
                           fetchNotes();
                         },
                         borderRadius: BorderRadius.circular(16),
@@ -99,8 +98,7 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
-                        children:
-                            List.generate(notesNotifier.value.length, (index) {
+                        children: List.generate(notesNotifier.value.length, (index) {
                           final note = notesNotifier.value[index];
                           final Map<String, dynamic> folderNoteInfo = {
                             "folder": folder,
@@ -110,8 +108,7 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
                             title: note.title,
                             contentPreview: note.content,
                             onTap: () {
-                              Modular.to
-                                  .pushNamed('note', arguments: folderNoteInfo);
+                              Modular.to.pushNamed('note', arguments: folderNoteInfo);
                             },
                           );
                         }),
