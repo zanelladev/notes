@@ -1,5 +1,7 @@
+import 'package:dependencies/dependencies.dart';
 import 'package:flutter/material.dart';
 
+import '../../../design_system.dart';
 import '../../common/extensions/notes_text_styles_extension.dart';
 
 class FolderCard extends StatelessWidget {
@@ -40,10 +42,24 @@ class FolderCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(title, style: textStyles.smallTextGrey),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: theme.colorScheme.onBackground,
-                    size: 18,
+                  InkWell(
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return CustomAlertDialog(
+                              isFolder: true,
+                              title: title,
+                              deleteFunction: () {},
+                            );
+                          });
+                    },
+                    borderRadius: BorderRadius.circular(16),
+                    child: Icon(
+                      Ionicons.trash_outline,
+                      color: theme.colorScheme.onBackground,
+                      size: 18,
+                    ),
                   ),
                 ],
               ),
