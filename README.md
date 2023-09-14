@@ -5,7 +5,7 @@ Project not yet finished, I'm still working on it
 ## Skills
 
 * Modular
-* ValueNotifier
+* Bloc
 * Sqflite
 * Melos
 * ThemeExtensions
