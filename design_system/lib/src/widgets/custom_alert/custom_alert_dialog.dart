@@ -5,10 +5,12 @@ import '../../../design_system.dart';
 class CustomAlertDialog extends StatelessWidget {
   final bool isFolder;
   final String title;
+  final VoidCallback deleteFunction;
   const CustomAlertDialog({
     super.key,
     required this.isFolder,
     required this.title,
+    required this.deleteFunction,
   });
 
   @override
@@ -28,9 +30,7 @@ class CustomAlertDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: deleteFunction,
             child: Text(
               'Yes',
               style: textStyles.headlineSLight.copyWith(fontSize: 16),

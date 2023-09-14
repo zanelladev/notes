@@ -3,7 +3,6 @@ import 'package:dependencies/dependencies.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/cupertino.dart';
 
 class NotePage extends StatefulWidget {
   final Map<String, dynamic> folderNoteInfo;
@@ -64,6 +63,7 @@ class _NotePageState extends State<NotePage> {
                             size: 28,
                           ),
                         ),
+                        const Spacer(),
                         InkWell(
                           onTap: () {
                             showDialog(
@@ -72,9 +72,20 @@ class _NotePageState extends State<NotePage> {
                                   return CustomAlertDialog(
                                     isFolder: false,
                                     title: note.title,
+                                    deleteFunction: () {},
                                   );
                                 });
                           },
+                          borderRadius: BorderRadius.circular(16),
+                          child: Icon(
+                            Ionicons.trash_outline,
+                            color: theme.colorScheme.background,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        InkWell(
+                          onTap: () {},
                           borderRadius: BorderRadius.circular(16),
                           child: Icon(
                             Ionicons.bookmark_outline,
