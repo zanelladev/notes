@@ -1,8 +1,6 @@
 import 'package:dependencies/dependencies.dart';
 import 'package:flutter/material.dart';
-
 import '../../../design_system.dart';
-import '../../common/extensions/notes_text_styles_extension.dart';
 
 class FolderCard extends StatelessWidget {
   final int id;

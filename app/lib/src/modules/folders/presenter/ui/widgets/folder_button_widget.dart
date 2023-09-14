@@ -1,15 +1,15 @@
 import 'package:core/core.dart';
+import 'package:dependencies/dependencies.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:your_notes/src/modules/folders/presenter/blocs/folders_cubit.dart';
 
 class FolderButtonWidget extends StatefulWidget {
   final Folder? folder;
-  final VoidCallback fetchFunction;
 
   const FolderButtonWidget({
     super.key,
     this.folder,
-    required this.fetchFunction,
   });
 
   @override
@@ -70,10 +70,11 @@ class _FolderButtonWidgetState extends State<FolderButtonWidget> {
                         ),
                         if (_controller.value.text.isNotEmpty)
                           IconButton(
-                            onPressed: () async {
-                              await folderDB.create(
-                                  title: _controller.value.text);
-                              widget.fetchFunction();
+                            onPressed: () {
+                              final foldersCubit = Modular.get<FoldersCubit>();
+                              foldersCubit.addFolder(
+                                title: _controller.value.text,
+                              );
                               setState(() {
                                 _isExtended = false;
                               });
