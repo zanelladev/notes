@@ -28,7 +28,7 @@ class FolderDB {
     return folders.map((folder) => Folder.fromSqfliteDatabase(folder)).toList();
   }
 
-  Future<int> update({
+  Future<int> updateCount({
     required int id,
     required int newCount,
   }) async {

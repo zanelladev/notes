@@ -3,13 +3,16 @@ import 'package:dependencies/dependencies.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:your_notes/src/modules/folders/presenter/blocs/folders_cubit.dart';
+import 'package:your_notes/src/modules/notes/presenter/blocs/notes_cubit.dart';
+import 'package:your_notes/src/modules/notes/presenter/blocs/notes_state.dart';
 
 class GeneralNotesPage extends StatefulWidget {
-  final Map<String, dynamic> folderInfo;
+  final Folder folder;
 
   const GeneralNotesPage({
     super.key,
-    required this.folderInfo,
+    required this.folder,
   });
 
   @override
@@ -17,28 +20,18 @@ class GeneralNotesPage extends StatefulWidget {
 }
 
 class _GeneralNotesPageState extends State<GeneralNotesPage> {
-  static final ValueNotifier<List<Note>> notesNotifier = ValueNotifier([]);
-  Future<List<Note>>? futureNotes;
-  final notesDB = NoteDB();
-  final folderDB = FolderDB();
+  final NotesCubit notesCubit = Modular.get();
 
   @override
   void initState() {
+    notesCubit.loadNotes(folderId: widget.folder.id);
     super.initState();
-    fetchNotes();
-  }
-
-  void fetchNotes() async {
-    final Folder folder = widget.folderInfo["folder"];
-    futureNotes = notesDB.fetchByFolder(folderId: folder.id);
-    notesNotifier.value = await futureNotes as List<Note>;
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textStyles = theme.extension<NotesTextStylesExtension>()!;
-    final Folder folder = widget.folderInfo["folder"];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: NotesSystemChromeSettings.dark,
@@ -66,12 +59,10 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
                         ),
                       ),
                       InkWell(
-                        onTap: () async {
-                          int beforeAdd = folder.notesCount;
-                          await notesDB.create(folderId: folder.id);
-                          beforeAdd++;
-                          await folderDB.update(id: folder.id, newCount: beforeAdd);
-                          fetchNotes();
+                        onTap: () {
+                          notesCubit.addNote(folderId: widget.folder.id);
+                          final FoldersCubit foldersCubit = Modular.get();
+                          foldersCubit.updateCount(folderId: widget.folder.id);
                         },
                         borderRadius: BorderRadius.circular(16),
                         child: Icon(
@@ -83,7 +74,7 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  Text(folder.title, style: textStyles.headlineSDark),
+                  Text(widget.folder.title, style: textStyles.headlineSDark),
                 ],
               ),
             ),
@@ -91,29 +82,34 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: ValueListenableBuilder(
-                    valueListenable: notesNotifier,
-                    builder: (context, value, _) {
-                      return GridView.count(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        children: List.generate(notesNotifier.value.length, (index) {
-                          final note = notesNotifier.value[index];
+                child: BlocBuilder<NotesCubit, NotesState>(
+                  bloc: notesCubit,
+                  builder: (context, state) {
+                    return GridView.count(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                      children: List.generate(
+                        state.notes.length,
+                        (index) {
+                          final note = state.notes[index];
                           final Map<String, dynamic> folderNoteInfo = {
-                            "folder": folder,
+                            "folder": widget.folder,
                             "note": note,
                           };
                           return NoteCard(
                             title: note.title,
                             contentPreview: note.content,
                             onTap: () {
-                              Modular.to.pushNamed('note', arguments: folderNoteInfo);
+                              Modular.to
+                                  .pushNamed('note', arguments: folderNoteInfo);
                             },
                           );
-                        }),
-                      );
-                    }),
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
             )
           ],
