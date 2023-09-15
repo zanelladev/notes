@@ -7,7 +7,10 @@ import 'package:your_notes/src/modules/notes/presenter/blocs/notes_state.dart';
 
 class NotePage extends StatelessWidget {
   final Map<String, dynamic> folderNoteInfo;
-  NotePage({super.key, required this.folderNoteInfo});
+  NotePage({
+    super.key,
+    required this.folderNoteInfo,
+  });
 
   final NotesCubit notesCubit = Modular.get();
 
@@ -56,7 +59,14 @@ class NotePage extends StatelessWidget {
                                     return CustomAlertDialog(
                                       isFolder: false,
                                       title: note.title,
-                                      deleteFunction: () {},
+                                      deleteFunction: () {
+                                        notesCubit.deleteNote(
+                                          noteId: note.id,
+                                          folderId: folder.id,
+                                        );
+                                        Navigator.pop(context);
+                                        Modular.to.pop();
+                                      },
                                     );
                                   },
                                 );

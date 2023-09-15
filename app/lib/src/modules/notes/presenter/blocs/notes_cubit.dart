@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependencies/dependencies.dart';
+import 'package:your_notes/src/modules/folders/presenter/blocs/folders_cubit.dart';
 import 'package:your_notes/src/modules/notes/presenter/blocs/notes_state.dart';
 import 'package:your_notes/src/modules/notes/data/repositories/notes_repository.dart';
 
@@ -36,5 +37,14 @@ class NotesCubit extends Cubit<NotesState> {
       return note;
     }).toList();
     emit(NotesSuccessState(notes: updatedNotes));
+  }
+
+  void deleteNote({required int noteId, required int folderId}) async {
+    FoldersCubit foldersCubit = Modular.get();
+
+    await repository.delete(noteId: noteId);
+    foldersCubit.updateCountDown(folderId: folderId);
+    state.notes.removeWhere((note) => note.id == noteId);
+    emit(NotesSuccessState(notes: state.notes));
   }
 }

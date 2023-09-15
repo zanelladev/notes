@@ -18,8 +18,35 @@ class FoldersCubit extends Cubit<FoldersState> {
     emit(FoldersSuccessState(folders: folders));
   }
 
-  Future<void> updateCount({required int folderId}) async {
+  Future<void> updateCountUp({required int folderId}) async {
     await repository.updateCount(
         id: folderId, newCount: state.folders[folderId - 1].notesCount + 1);
+    final newFolders = state.folders.map((folder) {
+      if (folder.id == folderId) {
+        return Folder(
+          id: folderId,
+          title: folder.title,
+          notesCount: folder.notesCount + 1,
+        );
+      }
+      return folder;
+    }).toList();
+    emit(FoldersSuccessState(folders: newFolders));
+  }
+
+  Future<void> updateCountDown({required int folderId}) async {
+    await repository.updateCount(
+        id: folderId, newCount: state.folders[folderId - 1].notesCount + 1);
+    final newFolders = state.folders.map((folder) {
+      if (folder.id == folderId) {
+        return Folder(
+          id: folderId,
+          title: folder.title,
+          notesCount: folder.notesCount - 1,
+        );
+      }
+      return folder;
+    }).toList();
+    emit(FoldersSuccessState(folders: newFolders));
   }
 }
