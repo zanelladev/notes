@@ -33,4 +33,22 @@ class Note {
         isFavorited: map['content'] == 1 ? true : false,
         folderId: map['folder_id'] ?? 0,
       );
+
+  Note copyWith({
+    int? id,
+    String? title,
+    String? content,
+    String? updateAt,
+    bool? isFavorited,
+    int? folderId,
+  }) {
+    return Note(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      updateAt: updateAt ?? this.updateAt,
+      isFavorited: isFavorited ?? this.isFavorited,
+      folderId: folderId ?? this.folderId,
+    );
+  }
 }

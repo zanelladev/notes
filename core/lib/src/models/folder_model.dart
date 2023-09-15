@@ -14,4 +14,16 @@ class Folder {
         title: map['title'] ?? '',
         notesCount: map['notes_count']?.toInt() ?? 0,
       );
+
+  Folder copyWith({
+    int? id,
+    String? title,
+    int? notesCount,
+  }) {
+    return Folder(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      notesCount: notesCount ?? this.notesCount,
+    );
+  }
 }

@@ -59,10 +59,22 @@ class _GeneralNotesPageState extends State<GeneralNotesPage> {
                         ),
                       ),
                       InkWell(
-                        onTap: () {
+                        onTap: () async {
                           notesCubit.addNote(folderId: widget.folder.id);
                           final FoldersCubit foldersCubit = Modular.get();
-                          foldersCubit.updateCount(folderId: widget.folder.id);
+                          await foldersCubit.updateCountUp(
+                              folderId: widget.folder.id);
+                          final Map<String, dynamic> folderNoteInfo = {
+                            "folder": widget.folder,
+                            "note": notesCubit.state.notes.reduce(
+                              (value, element) =>
+                                  value.id > element.id ? value : element,
+                            ),
+                          };
+                          Modular.to.pushNamed(
+                            'note',
+                            arguments: folderNoteInfo,
+                          );
                         },
                         borderRadius: BorderRadius.circular(16),
                         child: Icon(

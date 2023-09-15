@@ -22,4 +22,9 @@ class NotesRepositoryConcrete implements NotesRepository {
       return NoteDB().update(id: id, content: content);
     }
   }
+
+  @override
+  Future<void> delete({required int noteId}) {
+    return NoteDB().delete(id: noteId);
+  }
 }
