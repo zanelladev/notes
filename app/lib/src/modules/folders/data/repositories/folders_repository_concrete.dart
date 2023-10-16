@@ -18,4 +18,9 @@ class FoldersRepositoryConcrete implements FolderRepository {
   Future<int> create({required String title}) async {
     return await FolderDB().create(title: title);
   }
+
+  @override
+  Future<void> delete({required int folderId}) {
+    return FolderDB().delete(folderId: folderId);
+  }
 }

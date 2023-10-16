@@ -78,16 +78,6 @@ class NotePage extends StatelessWidget {
                                 size: 24,
                               ),
                             ),
-                            const SizedBox(width: 12),
-                            InkWell(
-                              onTap: () {},
-                              borderRadius: BorderRadius.circular(16),
-                              child: Icon(
-                                Ionicons.bookmark_outline,
-                                color: theme.colorScheme.background,
-                                size: 24,
-                              ),
-                            ),
                           ],
                         ),
                         const SizedBox(height: 24),
@@ -110,18 +100,21 @@ class NotePage extends StatelessWidget {
                           },
                         ),
                         SingleChildScrollView(
-                          child: TextFormField(
-                            style: textStyles.smallTextGrey,
-                            initialValue: note.content,
-                            maxLines: null,
-                            textInputAction: TextInputAction.newline,
-                            cursorColor: theme.colorScheme.secondary,
-                            decoration:
-                                const InputDecoration(border: InputBorder.none),
-                            onChanged: (value) {
-                              notesCubit.updateNote(
-                                  id: note.id, content: value);
-                            },
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.8,
+                            child: TextFormField(
+                              style: textStyles.smallTextGrey,
+                              initialValue: note.content,
+                              maxLines: null,
+                              textInputAction: TextInputAction.newline,
+                              cursorColor: theme.colorScheme.secondary,
+                              decoration: const InputDecoration(
+                                  border: InputBorder.none),
+                              onChanged: (value) {
+                                notesCubit.updateNote(
+                                    id: note.id, content: value);
+                              },
+                            ),
                           ),
                         ),
                       ],

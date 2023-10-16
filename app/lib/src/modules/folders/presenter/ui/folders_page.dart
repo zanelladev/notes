@@ -51,7 +51,7 @@ class _FoldersPageState extends State<FoldersPage> {
                     separatorBuilder: (_, __) => const SizedBox(height: 12),
                     itemBuilder: (_, index) {
                       final folder = state.folders[index];
-
+                      final FoldersCubit foldersCubit = Modular.get();
                       return FolderCard(
                         id: folder.id,
                         title: folder.title,
@@ -60,6 +60,10 @@ class _FoldersPageState extends State<FoldersPage> {
                           '/notes/',
                           arguments: folder,
                         ),
+                        deleteFunction: () {
+                          foldersCubit.deleteFolder(folderId: folder.id);
+                          Navigator.pop(context);
+                        },
                       );
                     },
                   );

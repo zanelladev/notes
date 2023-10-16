@@ -27,12 +27,17 @@ class NoteDB {
 
   Future<List<Note>> fetchByFolder({required int folderId}) async {
     final database = await DatabaseService().database;
-    final notes =
-        await database.rawQuery('''SELECT * from $tableName WHERE folder_id = ? ORDER BY id DESC''', [folderId]);
+    final notes = await database.rawQuery(
+        '''SELECT * from $tableName WHERE folder_id = ? ORDER BY id DESC''',
+        [folderId]);
     return notes.map((note) => Note.fromSqfliteDatabase(note)).toList();
   }
 
-  Future<int> update({required int id, String? title, String? content, bool? isFavorited}) async {
+  Future<int> update(
+      {required int id,
+      String? title,
+      String? content,
+      bool? isFavorited}) async {
     final database = await DatabaseService().database;
     return await database.update(
       tableName,
@@ -51,5 +56,11 @@ class NoteDB {
   Future<void> delete({required int id}) async {
     final database = await DatabaseService().database;
     await database.rawDelete('''DELETE FROM $tableName WHERE id = ?''', [id]);
+  }
+
+  Future<void> deleteAllByFolder({required int folderId}) async {
+    final database = await DatabaseService().database;
+    await database.rawDelete(
+        '''DELETE FROM $tableName WHERE folder_id = ?''', [folderId]);
   }
 }

@@ -7,6 +7,7 @@ class FolderCard extends StatelessWidget {
   final String title;
   final int notesQuantity;
   final VoidCallback onPressed;
+  final VoidCallback deleteFunction;
 
   const FolderCard({
     super.key,
@@ -14,6 +15,7 @@ class FolderCard extends StatelessWidget {
     required this.title,
     required this.notesQuantity,
     required this.onPressed,
+    required this.deleteFunction,
   });
 
   @override
@@ -48,7 +50,7 @@ class FolderCard extends StatelessWidget {
                             return CustomAlertDialog(
                               isFolder: true,
                               title: title,
-                              deleteFunction: () {},
+                              deleteFunction: () => deleteFunction(),
                             );
                           });
                     },
