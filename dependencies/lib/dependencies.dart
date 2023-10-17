@@ -7,3 +7,4 @@ export 'package:ionicons/ionicons.dart';
 export 'package:sqflite/sqflite.dart';
 export 'package:path/path.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
+export 'package:flutter_native_splash/flutter_native_splash.dart';

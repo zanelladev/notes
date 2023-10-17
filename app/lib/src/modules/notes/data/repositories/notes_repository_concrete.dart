@@ -27,4 +27,9 @@ class NotesRepositoryConcrete implements NotesRepository {
   Future<void> delete({required int noteId}) {
     return NoteDB().delete(id: noteId);
   }
+
+  @override
+  Future<void> deleteAllByFolder({required int folderId}) {
+    return NoteDB().deleteAllByFolder(folderId: folderId);
+  }
 }

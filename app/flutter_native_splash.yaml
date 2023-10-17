@@ -1,0 +1,11 @@
+flutter_native_splash:
+  image: assets/images/anotai_text.png
+  color: "#F0F2F1"
+  image_dark: assets/images/anotai_text.png
+  color_dark: "#F0F2F1"
+
+  android_12:
+    image: assets/images/anotai_text.png
+    color: "#F0F2F1"
+    image_dark: assets/images/anotai_text.png
+    color_dark: "#F0F2F1"

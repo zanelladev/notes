@@ -42,8 +42,9 @@ class FolderDB {
     );
   }
 
-  Future<void> delete(int id) async {
+  Future<void> delete({required int folderId}) async {
     final database = await DatabaseService().database;
-    await database.rawDelete('''DELETE FROM $tableName WHERE id = ?''', [id]);
+    await database
+        .rawDelete('''DELETE FROM $tableName WHERE id = ?''', [folderId]);
   }
 }

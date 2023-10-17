@@ -2,6 +2,7 @@ import 'package:core/core.dart';
 import 'package:dependencies/dependencies.dart';
 import 'package:your_notes/src/modules/folders/data/repositories/folders_repository.dart';
 import 'package:your_notes/src/modules/folders/presenter/blocs/folders_state.dart';
+import 'package:your_notes/src/modules/notes/data/repositories/notes_repository_concrete.dart';
 
 class FoldersCubit extends Cubit<FoldersState> {
   final FolderRepository repository;
@@ -48,5 +49,14 @@ class FoldersCubit extends Cubit<FoldersState> {
       return folder;
     }).toList();
     emit(FoldersSuccessState(folders: newFolders));
+  }
+
+  Future<void> deleteFolder({required int folderId}) async {
+    NotesRepositoryConcrete notesRepository = Modular.get();
+    await repository.delete(folderId: folderId);
+    await notesRepository.deleteAllByFolder(folderId: folderId);
+    state.folders.removeWhere((folder) => folder.id == folderId);
+
+    emit(FoldersSuccessState(folders: state.folders));
   }
 }

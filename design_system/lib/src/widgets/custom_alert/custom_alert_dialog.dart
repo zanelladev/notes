@@ -41,7 +41,8 @@ class CustomAlertDialog extends StatelessWidget {
           },
           child: Text(
             'Close',
-            style: textStyles.headlineSLight.copyWith(fontSize: 16, color: theme.colorScheme.primary),
+            style: textStyles.headlineSLight
+                .copyWith(fontSize: 16, color: theme.colorScheme.primary),
           ),
         )
       ],
